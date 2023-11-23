@@ -24,7 +24,7 @@ public class Main {
             path("/user/login", () -> get(UserController::login));
             path("/user/register", () -> get(UserController::register));
             path("/user/info", () -> get(UserController::userInfo));
-            path("/user/signIn", () -> get(UserController::signIn));
+            path("/user/signin", () -> get(UserController::signIn));
             path("/rankList", () -> get(GameController::rankList));
             path("/map/get", () -> get(MapController::getMap));
         });

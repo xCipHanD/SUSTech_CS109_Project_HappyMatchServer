@@ -12,4 +12,8 @@ public class SQL {
     public static final String CHECK_USER = "SELECT * FROM user WHERE `userName` = '%s' OR `email` = '%s'";
 
     public static final String USER_INFO = "SELECT * FROM user WHERE `token` = '%s'";
+
+    public static final String SIGN_IN = "UPDATE user SET signIn = CURRENT_TIMESTAMP WHERE token = '%s'";
+
+    public static final String ADD_COINS = "UPDATE user SET coins = coins + %s WHERE token = '%s'";
 }
