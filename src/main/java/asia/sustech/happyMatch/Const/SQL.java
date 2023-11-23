@@ -16,4 +16,7 @@ public class SQL {
     public static final String SIGN_IN = "UPDATE user SET signIn = CURRENT_TIMESTAMP WHERE token = '%s'";
 
     public static final String ADD_COINS = "UPDATE user SET coins = coins + %s WHERE token = '%s'";
+
+    public static final String RANKLIST = "SELECT * FROM user ORDER BY level DESC, coins DESC, experience DESC " +
+            "LIMIT 10;";
 }

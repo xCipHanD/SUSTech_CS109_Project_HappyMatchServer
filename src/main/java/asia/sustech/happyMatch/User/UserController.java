@@ -202,10 +202,6 @@ public class UserController {
         }
     }
 
-    public static void rankList(Context ctx) {
-
-    }
-
     public static void updateProcess(Context ctx) {
 
     }
