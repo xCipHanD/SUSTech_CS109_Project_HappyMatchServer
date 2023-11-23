@@ -8,10 +8,12 @@ import asia.sustech.happyMatch.DataBase.DAO;
 import asia.sustech.happyMatch.HTTPResult;
 import asia.sustech.happyMatch.Utils.FormatValidator;
 import asia.sustech.happyMatch.Utils.Token;
+import com.google.gson.JsonObject;
 import io.javalin.http.Context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class UserController {
     //解析参数->数据合法检验->token->数据库连接->数据库查询->返回
@@ -34,10 +36,10 @@ public class UserController {
         //生成token
         String token = Token.getToken(username);
         //数据库连接
-        new Config();
-        DAO dao = new DAO(Config.getUrl(), Config.getDbUser(), Config.getDbPwd(), Config.getDbDriver(), ctx);
+        DAO dao = new DAO(Config.url, Config.dbUser, Config.dbPwd, Config.dbDriver, ctx);
         //获取sql语句
-        //"UPDATE user SET loginTime = CURRENT_TIMESTAMP, token = '%s' WHERE (username = '%s' OR email = '%s') AND pwd = '%s'"
+        //"UPDATE user SET loginTime = CURRENT_TIMESTAMP, token = '%s' WHERE (username = '%s' OR email = '%s') AND
+        // pwd = '%s'"
         String sql = String.format(SQL.LOGIN, token, username, username, FormatValidator.getHashedPassword(password));
 //        System.out.println(sql);
         //发起数据库查询
@@ -69,8 +71,8 @@ public class UserController {
         //生成token
         String token = Token.getToken(username);
         //数据库连接
-        new Config();
-        DAO dao = new DAO(Config.getUrl(), Config.getDbUser(), Config.getDbPwd(), Config.getDbDriver(), ctx);
+//        new Config();
+        DAO dao = new DAO(Config.url, Config.dbUser, Config.dbPwd, Config.dbDriver, ctx);
         //执行&解析 sql
         //查看用户是否存在
         String sql = String.format(SQL.CHECK_USER, username, email);
@@ -92,14 +94,59 @@ public class UserController {
                 }
             }
         } catch (SQLException e) {
+            Logger.getLogger("UserController").warning("数据库查询失败" + e.getMessage());
+            new HTTPResult(ctx, StatusCode.SERVER_ERROR, Msg.SERVER_ERR, null, null).Return();
+            return;
+//            throw new RuntimeException(e);
+        }
+    }
+
+    // 查询用户信息，必要参数：token
+    //解析参数->数据合法检验->数据库连接->数据库查询->返回
+    public static void userInfo(Context ctx) {
+        ctx.contentType("application/json; charset=utf-8");
+        String token;
+        try {
+            token = ctx.queryParam("token");
+        } catch (Exception e) {
+            new HTTPResult(ctx, StatusCode.BAD_REQUEST, Msg.BAD_REQUEST, null, null).Return();
+            return;
+        }
+        //检验数据合法性
+        if (FormatValidator.isTokenInvalid(token)) {
+            new HTTPResult(ctx, StatusCode.BAD_REQUEST, Msg.BAD_REQUEST, null, null).Return();
+            return;
+        }
+        //数据库连接
+        DAO dao = new DAO(Config.url, Config.dbUser, Config.dbPwd, Config.dbDriver, ctx);
+        //执行&解析 sql
+        String sql = String.format(SQL.USER_INFO, token);
+        try {
+            ResultSet res = dao.query(sql);
+            if (res.next()) {
+                //用户存在
+                JsonObject data = new JsonObject();
+                data.addProperty("uid", res.getInt("uid"));
+                data.addProperty("username", res.getString("username"));
+                data.addProperty("email", res.getString("email"));
+                data.addProperty("avatarURL", res.getString("avatarURL"));
+                data.addProperty("experience", res.getInt("experience"));
+                data.addProperty("level", res.getInt("level"));
+                data.addProperty("coins", res.getInt("coins"));
+                data.addProperty("signIn", res.getInt("signIn"));
+                data.addProperty("role", res.getInt("role"));
+                new HTTPResult(ctx, StatusCode.OK, Msg.OK, data, null).Return();
+            } else {
+                //用户不存在
+                new HTTPResult(ctx, StatusCode.UNAUTHORIZED, Msg.UNAUTHORIZED, null, null).Return();
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void userInfo(Context ctx) {
-
-    }
-
+    // 签到，必要参数：token
+    //解析参数->数据合法检验->数据库连接->数据库查询->返回
     public static void signIn(Context ctx) {
 
     }

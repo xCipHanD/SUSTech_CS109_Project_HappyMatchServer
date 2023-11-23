@@ -9,10 +9,10 @@ public class HTTPResult {
     private final Context ctx;
     private final int code;
     private final String msg;
-    private final String data;
+    private final JsonObject data;
     private final String token;
 
-    public HTTPResult(Context ctx, int code, String msg, String data, String token) {
+    public HTTPResult(Context ctx, int code, String msg, JsonObject data, String token) {
         this.ctx = ctx;
         this.code = code;
         this.msg = msg;
@@ -27,7 +27,7 @@ public class HTTPResult {
         // 添加不同的键值对
         jsonObject.addProperty("code", code);
         jsonObject.addProperty("msg", msg);
-        if (data != null) jsonObject.addProperty("data", data);
+        if (data != null) jsonObject.add("data", data);
         if (token != null) jsonObject.addProperty("token", token);
         // 将JsonObject转换为JSON字符串
         Gson gson = new Gson();

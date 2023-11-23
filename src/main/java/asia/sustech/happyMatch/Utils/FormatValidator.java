@@ -2,11 +2,13 @@ package asia.sustech.happyMatch.Utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Logger;
 
 public class FormatValidator {
     private static final String emailRegex = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
     private static final String passwordRegex = "^[a-zA-Z0-9`~!@#$%^&*()_+\\-={}|\\[\\]\\\\:\";'<>?,./]{6,16}$";
-    private static final String userNameRegex = "^[a-zA-Z0-9_-]{6,16}$";
+    private static final String userNameRegex = "^[a-zA-Z0-9_-]{4,10}$";
+    private static final String tokenRegex = "^[a-zA-Z0-9]{32}$";
 
     private static final String salt = "heLlomYj@VApROJEcTbyXC1Ph4nd";
 
@@ -22,8 +24,13 @@ public class FormatValidator {
     }
 
     public static boolean isUserNameInvalid(String userName) {
-        if (userName == null || userName.length() > 16 || userName.length() < 6) return true;
+        if (userName == null || userName.length() > 10 || userName.length() < 4) return true;
         return !userName.matches(userNameRegex);
+    }
+
+    public static boolean isTokenInvalid(String token) {
+        if (token == null || token.length() != 32) return true;
+        return !token.matches(tokenRegex);
     }
 
     public static String getHashedPassword(String password) {
@@ -47,7 +54,7 @@ public class FormatValidator {
             //            System.out.println("MD5加密结果：" + md5Hash);
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Logger.getLogger("FormatValidator").warning("MD5加密失败" + e.getMessage());
         }
         return null;
     }

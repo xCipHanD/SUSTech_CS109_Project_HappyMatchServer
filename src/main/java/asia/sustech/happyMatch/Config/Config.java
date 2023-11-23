@@ -16,7 +16,6 @@ public class Config {
     public static String dbPwd;
     public static String dbDriver;
     public static String url;
-
     public static String email_User;
     public static String email_Pwd;
     public static String email_Host;
@@ -24,7 +23,7 @@ public class Config {
     public static int email_Port;
 
 
-    public Config() {
+    public static void init() {
         Logger logger = Logger.getLogger("Config");
         //读入数据库配置文件
         File f = new File("config.json");
@@ -49,7 +48,8 @@ public class Config {
                 email_ForgetPWD = (String) map.get("email_ForgetPWD");
                 email_Port = Integer.parseInt((String) map.get("email_Port"));
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.warning("读取config.json失败");
+                System.exit(1);
             }
         }
     }
