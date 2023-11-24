@@ -1,7 +1,11 @@
 package asia.sustech.happyMatch.Utils;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.logging.Logger;
 
 public class FormatValidator {
@@ -58,4 +62,38 @@ public class FormatValidator {
         }
         return null;
     }
+
+    public static boolean isAvatarInvalid(String avatar) {
+        if (avatar == null) return true;
+        //是否为base64编码 且是否小于2M
+        System.out.println(!isBase64Encoded(avatar) + " " + !isSizeValid(avatar));
+        return !isBase64Encoded(avatar) || !isSizeValid(avatar);
+    }
+
+    private static boolean isBase64Encoded(String avatar) {
+        try {
+            // 移除base64编码前缀部分
+            String imageData = avatar.split(",")[1];
+            // 解码base64数据
+            byte[] imageBytes = Base64.getDecoder().decode(imageData);
+            // 将字节数组转换为图像
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+            ImageIO.read(bis);
+            bis.close();
+            return true;
+        } catch (IllegalArgumentException | IOException e) {
+            return false;
+        }
+    }
+
+    private static boolean isSizeValid(String avatar) {
+        // 获取头像字符串的字节数
+        int avatarSize = avatar.getBytes().length;
+
+        // 将最大大小转换为字节数
+        int maxSizeInBytes = 2 * 1024 * 1024;
+
+        return avatarSize <= maxSizeInBytes;
+    }
+
 }

@@ -8,8 +8,7 @@ import asia.sustech.happyMatch.User.UserController;
 import io.javalin.Javalin;
 import lombok.extern.slf4j.Slf4j;
 
-import static io.javalin.apibuilder.ApiBuilder.get;
-import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 @Slf4j
 public class Main {
@@ -25,9 +24,11 @@ public class Main {
             path("/user/register", () -> get(UserController::register));
             path("/user/info", () -> get(UserController::userInfo));
             path("/user/signin", () -> get(UserController::signIn));
+            path("/user/changeAvatar", () -> post(UserController::changeAvatar));
             path("/ranklist", () -> get(GameController::rankList));
             path("/map/get", () -> get(MapController::getMap));
         });
+
 
     }
 }

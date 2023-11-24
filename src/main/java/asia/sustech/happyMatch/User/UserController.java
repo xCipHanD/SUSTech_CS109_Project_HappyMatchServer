@@ -7,12 +7,16 @@ import asia.sustech.happyMatch.Const.StatusCode;
 import asia.sustech.happyMatch.DataBase.DAO;
 import asia.sustech.happyMatch.HTTPResult;
 import asia.sustech.happyMatch.Utils.FormatValidator;
+import asia.sustech.happyMatch.Utils.ImageUtils;
 import asia.sustech.happyMatch.Utils.Token;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.javalin.http.Context;
 
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class UserController {
@@ -41,7 +45,6 @@ public class UserController {
         //"UPDATE user SET loginTime = CURRENT_TIMESTAMP, token = '%s' WHERE (username = '%s' OR email = '%s') AND
         // pwd = '%s'"
         String sql = String.format(SQL.LOGIN, token, username, username, FormatValidator.getHashedPassword(password));
-//        System.out.println(sql);
         //发起数据库查询
         //200成功，403用户名密码错误，400参数非法，500服务器错误
         if (dao.update(sql)) {
@@ -96,8 +99,6 @@ public class UserController {
         } catch (SQLException e) {
             Logger.getLogger("UserController").warning("数据库查询失败" + e.getMessage());
             new HTTPResult(ctx, StatusCode.SERVER_ERROR, Msg.SERVER_ERR, null, null).Return();
-            return;
-//            throw new RuntimeException(e);
         }
     }
 
@@ -202,7 +203,62 @@ public class UserController {
         }
     }
 
+    // 更新用户信息，必要参数：token
+    //解析参数->数据合法检验->数据库连接->数据库查询->返回
     public static void updateProcess(Context ctx) {
 
+    }
+
+    // 更新用户头像(post)，必要参数：token, avatarBase64文本
+    //解析参数->数据合法检验->数据库连接->数据库查询->返回
+    public static void changeAvatar(Context context) {
+        context.contentType("application/json; charset=utf-8");
+        String token, avatar;
+        try {
+            String data = context.body();
+            //解析json
+            Type type = new com.google.gson.reflect.TypeToken<Map<String, Object>>() {
+            }.getType();
+            Gson gson = new Gson();
+            Map<String, Object> map = gson.fromJson(data, type);
+            token = (String) map.get("token");
+            avatar = (String) map.get("avatar");
+        } catch (Exception e) {
+            new HTTPResult(context, StatusCode.BAD_REQUEST, Msg.BAD_REQUEST, null, null).Return();
+            return;
+        }
+        //检验数据合法性
+        if (FormatValidator.isTokenInvalid(token) || FormatValidator.isAvatarInvalid(avatar)) {
+            new HTTPResult(context, StatusCode.BAD_REQUEST, Msg.BAD_REQUEST, null, null).Return();
+            return;
+        }
+        //数据库连接
+        DAO dao = new DAO(Config.url, Config.dbUser, Config.dbPwd, Config.dbDriver, context);
+        //执行&解析 sql
+        String sql = String.format(SQL.USER_INFO, token);
+        try {
+            ResultSet res = dao.query(sql);
+            if (res.next()) {
+                //用户存在
+                //解析base64编码的图片到图片对象,jpg格式
+                if (FormatValidator.isAvatarInvalid(avatar)) {
+                    new HTTPResult(context, StatusCode.BAD_REQUEST, Msg.BAD_REQUEST, null, null).Return();
+                    return;
+                } else {
+                    //保存图片到本地
+                    String fileName = res.getInt("uid") + ".jpg";
+                    //保存到当前目录下的avatar文件夹下
+                    String filePath = System.getProperty("user.dir") + "/avatar/" + fileName;
+                    ImageUtils.saveBase64ImageAsJpg(avatar, filePath);
+                    //更新数据库
+                    //返回url
+                }
+            } else {
+                //用户不存在
+                new HTTPResult(context, StatusCode.UNAUTHORIZED, Msg.UNAUTHORIZED, null, null).Return();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
