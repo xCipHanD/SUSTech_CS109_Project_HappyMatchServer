@@ -21,7 +21,7 @@ public class ImageUtils {
             image = ImageIO.read(bis);
             bis.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger("ImageUtils").warning("图像解码失败！");
         }
 
         if (image != null) {

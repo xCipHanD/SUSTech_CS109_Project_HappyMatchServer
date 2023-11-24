@@ -66,8 +66,7 @@ public class FormatValidator {
     public static boolean isAvatarInvalid(String avatar) {
         if (avatar == null) return true;
         //是否为base64编码 且是否小于2M
-        System.out.println(!isBase64Encoded(avatar) + " " + !isSizeValid(avatar));
-        return !isBase64Encoded(avatar) || !isSizeValid(avatar);
+        return isBase64Encoded(avatar) || isSizeValid(avatar);
     }
 
     private static boolean isBase64Encoded(String avatar) {
@@ -80,9 +79,9 @@ public class FormatValidator {
             ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
             ImageIO.read(bis);
             bis.close();
-            return true;
-        } catch (IllegalArgumentException | IOException e) {
             return false;
+        } catch (IllegalArgumentException | IOException e) {
+            return true;
         }
     }
 
@@ -93,7 +92,7 @@ public class FormatValidator {
         // 将最大大小转换为字节数
         int maxSizeInBytes = 2 * 1024 * 1024;
 
-        return avatarSize <= maxSizeInBytes;
+        return avatarSize > maxSizeInBytes;
     }
 
 }

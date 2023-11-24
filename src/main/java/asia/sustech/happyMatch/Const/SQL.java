@@ -19,4 +19,5 @@ public class SQL {
 
     public static final String RANKLIST = "SELECT * FROM user ORDER BY level DESC, coins DESC, experience DESC " +
             "LIMIT 10;";
+    public static final String CHANGE_AVATAR = "UPDATE user SET avatarURL = '%s' WHERE token = '%s';";
 }

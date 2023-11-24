@@ -251,6 +251,16 @@ public class UserController {
                     String filePath = System.getProperty("user.dir") + "/avatar/" + fileName;
                     ImageUtils.saveBase64ImageAsJpg(avatar, filePath);
                     //更新数据库
+                    sql = String.format(SQL.CHANGE_AVATAR, "/avatar/" + fileName, token);
+                    if (dao.update(sql)) {
+                        //更新成功
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("avatarURL", "/avatar/" + fileName);
+                        new HTTPResult(context, StatusCode.OK, Msg.OK, jsonObject, null).Return();
+                    } else {
+                        //更新失败
+                        new HTTPResult(context, StatusCode.SERVER_ERROR, Msg.SERVER_ERR, null, null).Return();
+                    }
                     //返回url
                 }
             } else {
