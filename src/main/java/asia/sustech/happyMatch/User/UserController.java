@@ -42,14 +42,14 @@ public class UserController {
         //数据库连接
         DAO dao = new DAO(Config.url, Config.dbUser, Config.dbPwd, Config.dbDriver, ctx);
         //获取sql语句
-        //"UPDATE user SET loginTime = CURRENT_TIMESTAMP, token = '%s' WHERE (username = '%s' OR email = '%s') AND
-        // pwd = '%s'"
         String sql = String.format(SQL.LOGIN, token, username, username, FormatValidator.getHashedPassword(password));
         //发起数据库查询
         //200成功，403用户名密码错误，400参数非法，500服务器错误
         if (dao.update(sql)) {
+            Logger.getLogger("UserController").info("用户" + username + "登录成功");
             new HTTPResult(ctx, StatusCode.OK, Msg.LOGIN_SUCCESS, null, token).Return();
         } else {
+            Logger.getLogger("UserController").info("用户" + username + "登录失败");
             new HTTPResult(ctx, StatusCode.ERROR_UP, Msg.ERROR_UP, null, null).Return();
         }
     }
@@ -83,6 +83,7 @@ public class UserController {
             ResultSet res = dao.query(sql);
             if (res.next()) {
                 //用户存在
+                Logger.getLogger("UserController").info("用户" + username + "注册失败，用户已存在");
                 new HTTPResult(ctx, StatusCode.USER_EXIST, Msg.USER_EXIST, null, null).Return();
             } else {
                 //用户不存在->注册
@@ -90,9 +91,10 @@ public class UserController {
 
                 if (dao.update(sql)) {
                     //注册成功(返回token
+                    Logger.getLogger("UserController").info("用户" + username + "注册成功");
                     new HTTPResult(ctx, StatusCode.OK, Msg.REGISTER_SUCCESS, null, token).Return();
-
                 } else {
+                    Logger.getLogger("UserController").info("用户" + username + "注册失败，数据库错误");
                     new HTTPResult(ctx, StatusCode.SERVER_ERROR, Msg.SERVER_ERR, null, null).Return();
                 }
             }
@@ -136,6 +138,7 @@ public class UserController {
                 data.addProperty("coins", res.getInt("coins"));
                 data.addProperty("signIn", String.valueOf(res.getDate("signIn")));
                 data.addProperty("role", res.getInt("role"));
+                Logger.getLogger("UserController").info("用户" + res.getString("username") + "查询信息成功");
                 new HTTPResult(ctx, StatusCode.OK, Msg.OK, data, null).Return();
             } else {
                 //用户不存在
@@ -256,6 +259,7 @@ public class UserController {
                         //更新成功
                         JsonObject jsonObject = new JsonObject();
                         jsonObject.addProperty("avatarURL", "/avatar/" + fileName);
+                        Logger.getLogger("UserController").info("用户" + res.getString("username") + "更新头像成功");
                         new HTTPResult(context, StatusCode.OK, Msg.OK, jsonObject, null).Return();
                     } else {
                         //更新失败
