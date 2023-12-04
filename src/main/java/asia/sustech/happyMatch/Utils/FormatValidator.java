@@ -95,4 +95,8 @@ public class FormatValidator {
         return avatarSize > maxSizeInBytes;
     }
 
+    public static boolean isCodeInvalid(String code) {
+        //验证码是否为4位数字
+        return code == null || code.length() != 4 || !code.matches("^[0-9]{4}$");
+    }
 }

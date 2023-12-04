@@ -20,4 +20,6 @@ public class SQL {
     public static final String RANKLIST = "SELECT * FROM user ORDER BY level DESC, coins DESC, experience DESC " +
             "LIMIT 10;";
     public static final String CHANGE_AVATAR = "UPDATE user SET avatarURL = '%s' WHERE token = '%s';";
+    public static final String GEN_CODE =
+    public static final String CHANGE_PWD = "UPDATE user SET pwd = '%s' WHERE token = '%s';";
 }

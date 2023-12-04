@@ -12,6 +12,7 @@ import io.javalin.http.Context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class GameController {
     // 查看排行榜，必要参数：token
@@ -53,6 +54,7 @@ public class GameController {
                     data.add(String.valueOf(i), user);
                     i++;
                 }
+                Logger.getLogger("GameController").info("用户" + res.getString("username") + "获取排行榜成功");
                 new HTTPResult(ctx, StatusCode.OK, Msg.OK, data, null).Return();
             } else {
                 //用户不存在
