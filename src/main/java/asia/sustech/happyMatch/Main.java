@@ -8,6 +8,7 @@ import asia.sustech.happyMatch.Shop.GoodsController;
 import asia.sustech.happyMatch.User.PWDController;
 import asia.sustech.happyMatch.User.UserController;
 import io.javalin.Javalin;
+import io.javalin.http.staticfiles.Location;
 import lombok.extern.slf4j.Slf4j;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -21,11 +22,18 @@ public class Main {
             //静态资源
             config.staticFiles.add(staticFiles -> {
                 staticFiles.hostedPath = "/res/avatar";
-                staticFiles.directory = "/avatar";
+                staticFiles.directory = System.getProperty("user.dir") + "/avatar";
+                staticFiles.location = Location.EXTERNAL;
             });
             config.staticFiles.add(staticFiles -> {
                 staticFiles.hostedPath = "/res/goods";
-                staticFiles.directory = "/goods";
+                staticFiles.directory = System.getProperty("user.dir") + "/goods";
+                staticFiles.location = Location.EXTERNAL;
+            });
+            config.staticFiles.add(staticFiles -> {
+                staticFiles.hostedPath = "/res/maps";
+                staticFiles.directory = System.getProperty("user.dir") + "/maps";
+                staticFiles.location = Location.EXTERNAL;
             });
         }).start(80);
         app.get("/", ctx -> ctx.result("Hello HappyMatch!"));
@@ -43,6 +51,7 @@ public class Main {
             path("/ranklist", () -> get(GameController::rankList));
             path("/map/get", () -> get(MapController::getMap));
             path("/shop/getGoodsList", () -> get(GoodsController::getGoodsList));
+            path("/shop/buy", () -> get(GoodsController::buyGoods));
         });
 
 

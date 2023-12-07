@@ -22,12 +22,14 @@ public class SQL {
             "LIMIT 3;";
     public static final String CHANGE_AVATAR = "UPDATE user SET avatarURL = '%s' WHERE token = '%s';";
     //    public static final String GEN_CODE =
-    public static final String CHANGE_PWD = "UPDATE user SET pwd = '%s' WHERE token = '%s';";
-
     public static final String GET_GOODS = "SELECT * FROM items";
     public static final String UPDATE_CODE = "UPDATE user SET verifyCode = '%s', verifyCodeTime = CURRENT_TIMESTAMP +" +
             " " +
             "INTERVAL 10 MINUTE WHERE email = '%s';";
     public static final String UPDATE_PWD = "UPDATE user SET pwd = '%s' WHERE email = '%s';";
     public static final String UPDATE_PROCESS = "UPDATE user SET level = %s, experience = %s WHERE token = '%s';";
+    public static final String BUY_GOODS = "INSERT INTO property (userId, itemId, count) VALUES (%d, %d, 1) ON " +
+            "DUPLICATE KEY UPDATE count = count + 1;";
+    public static final String GET_ITEM_BY_ID = "SELECT * FROM items WHERE id = %s;";
+    public static final String GET_PROPERTY = "SELECT * FROM property WHERE userId = %d;";
 }
