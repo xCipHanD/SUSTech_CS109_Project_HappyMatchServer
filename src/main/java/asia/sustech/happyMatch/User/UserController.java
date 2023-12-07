@@ -31,7 +31,7 @@ public class UserController {
             return;
         }
         //检验数据合法性
-        if (FormatValidator.isPasswordInvalid(password) || FormatValidator.isUserNameInvalid(username)) {
+        if (FormatValidator.isPasswordInvalid(password) || (FormatValidator.isUserNameInvalid(username) && FormatValidator.isEmailInvalid(username))) {
             new HTTPResult(ctx, StatusCode.BAD_REQUEST, Msg.BAD_REQUEST, null, null).Return();
             return;
         }

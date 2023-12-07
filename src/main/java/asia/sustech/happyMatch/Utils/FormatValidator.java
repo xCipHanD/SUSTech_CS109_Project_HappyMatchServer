@@ -22,8 +22,9 @@ public class FormatValidator {
     }
 
     public static boolean isPasswordInvalid(String password) {
-        if (password == null || password.length() > 16 || password.length() < 6)
+        if (password == null || password.length() > 16 || password.length() < 6) {
             return true;
+        }
         return !password.matches(passwordRegex);
     }
 

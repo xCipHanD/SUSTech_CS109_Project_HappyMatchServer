@@ -18,8 +18,8 @@ public class SQL {
 
     public static final String ADD_COINS = "UPDATE user SET coins = coins + %s WHERE token = '%s'";
 
-    public static final String RANKLIST = "SELECT * FROM user ORDER BY level DESC, coins DESC, experience DESC " +
-            "LIMIT 10;";
+    public static final String RANKLIST = "SELECT * FROM user ORDER BY level DESC, experience DESC, coins DESC " +
+            "LIMIT 3;";
     public static final String CHANGE_AVATAR = "UPDATE user SET avatarURL = '%s' WHERE token = '%s';";
     //    public static final String GEN_CODE =
     public static final String CHANGE_PWD = "UPDATE user SET pwd = '%s' WHERE token = '%s';";
@@ -28,4 +28,6 @@ public class SQL {
     public static final String UPDATE_CODE = "UPDATE user SET verifyCode = '%s', verifyCodeTime = CURRENT_TIMESTAMP +" +
             " " +
             "INTERVAL 10 MINUTE WHERE email = '%s';";
+    public static final String UPDATE_PWD = "UPDATE user SET pwd = '%s' WHERE email = '%s';";
+    public static final String UPDATE_PROCESS = "UPDATE user SET level = %s, experience = %s WHERE token = '%s';";
 }

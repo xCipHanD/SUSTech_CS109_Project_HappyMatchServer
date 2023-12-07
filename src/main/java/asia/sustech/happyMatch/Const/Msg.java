@@ -4,6 +4,8 @@ package asia.sustech.happyMatch.Const;
 public class Msg {
     public static final String OK = "成功";
     public static final String ALREADY_SEND_CODE = "验证码已发送";
+    public static final String CODE_OUT_OF_DATE = "验证码已过期";
+    public static final String CODE_ERROR = "验证码错误";
     public static final String BAD_REQUEST = "参数不合法";
     public static final String LOGIN_SUCCESS = "登录成功";
     public static final String ERROR_UP = "用户名密码错误";

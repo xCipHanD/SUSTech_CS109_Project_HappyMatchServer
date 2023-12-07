@@ -22,19 +22,55 @@ public class PWDController extends Thread {
 
     //修改密码的方法。用户传入新密码、token、验证码，返回是否修改成功/验证码是否正确
     public static void changePWD(Context ctx) {
+        String email, code, newPWD;
         //解析参数
-        String token = ctx.queryParam("token");
-        String newPWD = ctx.queryParam("newPWD");
-        String code = ctx.queryParam("code");
+        email = ctx.queryParam("email");
+        newPWD = ctx.queryParam("newPWD");
+        code = ctx.queryParam("code");
         //检查参数是否有效
-        if (FormatValidator.isPasswordInvalid(newPWD) || FormatValidator.isTokenInvalid(token) || FormatValidator.isCodeInvalid(code)) {
+        if (FormatValidator.isPasswordInvalid(newPWD) || FormatValidator.isCodeInvalid(code) || FormatValidator.isEmailInvalid(email)) {
             new HTTPResult(ctx, StatusCode.BAD_REQUEST, Msg.BAD_REQUEST, null, null).Return();
             return;
         }
         //连接数据库查询token是否有效，code是否正确且是否在有效期内
         DAO dao = new DAO(Config.url, Config.dbUser, Config.dbPwd, Config.dbDriver, ctx);
         //执行&解析 sql
-        String sql = String.format(SQL.USER_INFO, token);
+        String sql = String.format(SQL.CHECK_USER_BY_EMAIL, email);
+        try {
+            ResultSet res = dao.query(sql);
+            if (res.next()) {
+                //用户存在
+                //是否存在验证码
+                if (res.getString("verifyCode").isEmpty() || res.getString("verifyCodeTime").isEmpty()) {
+                    new HTTPResult(ctx, StatusCode.UNAUTHORIZED, Msg.UNAUTHORIZED, null, null).Return();
+                    return;
+                }
+                //检查验证码是否正确且是否在有效期内
+                if (res.getTimestamp("verifyCodeTime").getTime() + 10 * 60 * 1000 < System.currentTimeMillis()) {
+                    new HTTPResult(ctx, StatusCode.UNAUTHORIZED, Msg.CODE_OUT_OF_DATE, null, null).Return();
+                    return;
+                }
+                //检查验证码是否正确
+                if (!res.getString("verifyCode").equals(code)) {
+                    new HTTPResult(ctx, StatusCode.UNAUTHORIZED, Msg.CODE_ERROR, null, null).Return();
+                    return;
+                }
+                //验证码正确，修改密码
+                sql = String.format(SQL.UPDATE_PWD, FormatValidator.getHashedPassword(newPWD), email);
+                dao.update(sql);
+                Logger.getLogger("UserController").info(
+                        "用户" + res.getString("userName") + "修改密码成功");
+                //返回用户token
+                new HTTPResult(ctx, StatusCode.OK, Msg.OK, null, null).Return();
+            } else {
+                //用户不存在
+                new HTTPResult(ctx, StatusCode.UNAUTHORIZED, Msg.UNAUTHORIZED, null, null).Return();
+            }
+            return;
+        } catch (Exception e) {
+            new HTTPResult(ctx, StatusCode.BAD_REQUEST, Msg.BAD_REQUEST, null, null).Return();
+            return;
+        }
     }
 
     //获取验证码

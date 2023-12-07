@@ -39,6 +39,7 @@ public class Main {
             path("/user/changeAvatar", () -> post(UserController::changeAvatar));
             path("/user/getCode", () -> get(PWDController::getCode));
             path("/user/changePWD", () -> get(PWDController::changePWD));
+            path("/user/updateProcess", () -> get(GameController::updateProcess));
             path("/ranklist", () -> get(GameController::rankList));
             path("/map/get", () -> get(MapController::getMap));
             path("/shop/getGoodsList", () -> get(GoodsController::getGoodsList));
