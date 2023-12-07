@@ -1,7 +1,7 @@
 package asia.sustech.happyMatch;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.javalin.http.Context;
 
 //http返回的结果
@@ -9,10 +9,10 @@ public class HTTPResult {
     private final Context ctx;
     private final int code;
     private final String msg;
-    private final JsonObject data;
+    private final JSONObject data;
     private final String token;
 
-    public HTTPResult(Context ctx, int code, String msg, JsonObject data, String token) {
+    public HTTPResult(Context ctx, int code, String msg, JSONObject data, String token) {
         this.ctx = ctx;
         this.code = code;
         this.msg = msg;
@@ -23,14 +23,13 @@ public class HTTPResult {
     public void Return() {
         ctx.contentType("application/json; charset=utf-8");
         //构造返回的json
-        JsonObject jsonObject = new JsonObject();
+        JSONObject jsonObject = JSON.parseObject("{}");
         // 添加不同的键值对
-        jsonObject.addProperty("code", code);
-        jsonObject.addProperty("msg", msg);
-        if (data != null) jsonObject.add("data", data);
-        if (token != null) jsonObject.addProperty("token", token);
+        jsonObject.put("code", code);
+        jsonObject.put("msg", msg);
+        if (data != null) jsonObject.put("data", data);
+        if (token != null) jsonObject.put("token", token);
         // 将JsonObject转换为JSON字符串
-        Gson gson = new Gson();
-        ctx.result(gson.toJson(jsonObject));
+        ctx.result(jsonObject.toJSONString());
     }
 }

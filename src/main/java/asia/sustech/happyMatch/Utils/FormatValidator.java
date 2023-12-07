@@ -99,4 +99,23 @@ public class FormatValidator {
         //验证码是否为4位数字
         return code == null || code.length() != 4 || !code.matches("^[0-9]{4}$");
     }
+
+    public static boolean isMapIdInvalid(String mapId) {
+        //地图id是否为数字
+        return mapId == null || !mapId.matches("^[0-9]{1,2}$");
+    }
+
+
+    public static boolean isResPathInValid(String res) {
+        //res不包含"/ \"
+        return res.matches("^\\$") || res.matches("^/$");
+    }
+
+    public static String getRandomCode() {
+        StringBuilder code = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            code.append((int) (Math.random() * 10));
+        }
+        return code.toString();
+    }
 }

@@ -7,7 +7,8 @@ import asia.sustech.happyMatch.Const.StatusCode;
 import asia.sustech.happyMatch.DataBase.DAO;
 import asia.sustech.happyMatch.HTTPResult;
 import asia.sustech.happyMatch.Utils.FormatValidator;
-import com.google.gson.JsonObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.javalin.http.Context;
 
 import java.sql.ResultSet;
@@ -42,16 +43,16 @@ public class GameController {
                 //获取排行榜
                 sql = SQL.RANKLIST;
                 res = dao.query(sql);
-                JsonObject data = new JsonObject();
+                JSONObject data = JSON.parseObject("{}");   //构造返回的json
                 int i = 1;
                 while (res.next()) {
-                    JsonObject user = new JsonObject();
-                    user.addProperty("username", res.getString("username"));
-                    user.addProperty("avatarURL", res.getString("avatarURL"));
-                    user.addProperty("level", res.getInt("level"));
-                    user.addProperty("coins", res.getInt("coins"));
-                    user.addProperty("experience", res.getInt("experience"));
-                    data.add(String.valueOf(i), user);
+                    JSONObject user = JSON.parseObject("{}");
+                    user.put("username", res.getString("username"));
+                    user.put("avatarURL", res.getString("avatarURL"));
+                    user.put("level", res.getInt("level"));
+                    user.put("coins", res.getInt("coins"));
+                    user.put("experience", res.getInt("experience"));
+                    data.put(String.valueOf(i), user);
                     i++;
                 }
                 Logger.getLogger("GameController").info("用户" + res.getString("username") + "获取排行榜成功");

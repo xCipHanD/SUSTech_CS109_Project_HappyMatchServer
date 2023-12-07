@@ -53,7 +53,7 @@ public class EmailSender {
             Transport.send(message);
             System.out.println("Email sent successfully to " + recipient);
         } catch (MessagingException e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             System.out.println("Failed to send email to " + recipient);
         }
     }

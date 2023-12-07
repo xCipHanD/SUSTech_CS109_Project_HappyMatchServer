@@ -3,6 +3,7 @@ package asia.sustech.happyMatch.Const;
 //定义返回的消息
 public class Msg {
     public static final String OK = "成功";
+    public static final String ALREADY_SEND_CODE = "验证码已发送";
     public static final String BAD_REQUEST = "参数不合法";
     public static final String LOGIN_SUCCESS = "登录成功";
     public static final String ERROR_UP = "用户名密码错误";

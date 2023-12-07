@@ -9,14 +9,12 @@ import asia.sustech.happyMatch.HTTPResult;
 import asia.sustech.happyMatch.Utils.FormatValidator;
 import asia.sustech.happyMatch.Utils.ImageUtils;
 import asia.sustech.happyMatch.Utils.Token;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.javalin.http.Context;
 
-import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class UserController {
@@ -128,16 +126,16 @@ public class UserController {
             ResultSet res = dao.query(sql);
             if (res.next()) {
                 //用户存在
-                JsonObject data = new JsonObject();
-                data.addProperty("uid", res.getInt("uid"));
-                data.addProperty("username", res.getString("username"));
-                data.addProperty("email", res.getString("email"));
-                data.addProperty("avatarURL", res.getString("avatarURL"));
-                data.addProperty("experience", res.getInt("experience"));
-                data.addProperty("level", res.getInt("level"));
-                data.addProperty("coins", res.getInt("coins"));
-                data.addProperty("signIn", String.valueOf(res.getDate("signIn")));
-                data.addProperty("role", res.getInt("role"));
+                JSONObject data = JSON.parseObject("{}");
+                data.put("uid", res.getInt("uid"));
+                data.put("username", res.getString("username"));
+                data.put("email", res.getString("email"));
+                data.put("avatarURL", res.getString("avatarURL"));
+                data.put("experience", res.getInt("experience"));
+                data.put("level", res.getInt("level"));
+                data.put("coins", res.getInt("coins"));
+                data.put("signIn", String.valueOf(res.getDate("signIn")));
+                data.put("role", res.getInt("role"));
                 Logger.getLogger("UserController").info("用户" + res.getString("username") + "查询信息成功");
                 new HTTPResult(ctx, StatusCode.OK, Msg.OK, data, null).Return();
             } else {
@@ -220,12 +218,9 @@ public class UserController {
         try {
             String data = context.body();
             //解析json
-            Type type = new com.google.gson.reflect.TypeToken<Map<String, Object>>() {
-            }.getType();
-            Gson gson = new Gson();
-            Map<String, Object> map = gson.fromJson(data, type);
-            token = (String) map.get("token");
-            avatar = (String) map.get("avatar");
+            JSONObject jsonObject = JSON.parseObject(data);
+            token = jsonObject.getString("token");
+            avatar = jsonObject.getString("avatar");
         } catch (Exception e) {
             new HTTPResult(context, StatusCode.BAD_REQUEST, Msg.BAD_REQUEST, null, null).Return();
             return;
@@ -254,11 +249,11 @@ public class UserController {
                     String filePath = System.getProperty("user.dir") + "/avatar/" + fileName;
                     ImageUtils.saveBase64ImageAsJpg(avatar, filePath);
                     //更新数据库
-                    sql = String.format(SQL.CHANGE_AVATAR, "/avatar/" + fileName, token);
+                    sql = String.format(SQL.CHANGE_AVATAR, "/res/avatar/" + fileName, token);
                     if (dao.update(sql)) {
                         //更新成功
-                        JsonObject jsonObject = new JsonObject();
-                        jsonObject.addProperty("avatarURL", "/avatar/" + fileName);
+                        JSONObject jsonObject = JSON.parseObject("{}");
+                        jsonObject.put("avatarURL", "/res/avatar/" + fileName);
                         Logger.getLogger("UserController").info("用户" + res.getString("username") + "更新头像成功");
                         new HTTPResult(context, StatusCode.OK, Msg.OK, jsonObject, null).Return();
                     } else {
