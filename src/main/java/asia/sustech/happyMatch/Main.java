@@ -35,7 +35,7 @@ public class Main {
                 staticFiles.directory = System.getProperty("user.dir") + "/maps";
                 staticFiles.location = Location.EXTERNAL;
             });
-        }).start(80);
+        }).start(Config.server_port);
         app.get("/", ctx -> ctx.result("Hello HappyMatch!"));
 
 

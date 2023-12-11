@@ -16,4 +16,5 @@ public class Msg {
     public static final String MONEY_NOT_ENOUGH = "金币不足";
     public static final String USER_EXIST = "用户已存在";
     public static final String ALREADY_CHECKIN = "今日已签到";
+    public static final String NOT_FOUND = "没有找到该地图";
 }

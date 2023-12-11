@@ -10,6 +10,17 @@ class FormatValidatorTest {
 //        System.out.println(FormatValidator.isEmailValid("bba@asdb.iouou9"));
 //        System.out.println(FormatValidator.isEmailValid("bba@sdf.i.io."));
 //        System.out.println(FormatValidator.isEmailValid("?"));
-        System.out.println(FormatValidator.getHashedPassword("123456"));
+        System.out.println(FormatValidator.isMapFormatInvalid("""
+                2 8 8 2 2 9
+                1 0 10 5
+                2 0 10 6
+                0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0"""));
     }
 }

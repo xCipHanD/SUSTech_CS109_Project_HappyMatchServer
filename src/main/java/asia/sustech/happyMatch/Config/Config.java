@@ -19,7 +19,7 @@ public class Config {
     public static String email_Host;
     public static String email_ForgetPWD;
     public static int email_Port;
-
+    public static int server_port;
 
     public static void init() {
         Logger logger = Logger.getLogger("Config");
@@ -43,6 +43,7 @@ public class Config {
                 email_Host = jsonObject.getString("email_Host");
                 email_ForgetPWD = jsonObject.getString("email_ForgetPWD");
                 email_Port = jsonObject.getInteger("email_Port");
+                server_port = jsonObject.getInteger("server_port");
             } catch (IOException e) {
                 logger.warning("读取config.json失败");
                 System.exit(1);

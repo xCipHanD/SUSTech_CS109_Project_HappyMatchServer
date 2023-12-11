@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class FormatValidator {
@@ -102,8 +103,8 @@ public class FormatValidator {
     }
 
     public static boolean isMapIdInvalid(String mapId) {
-        //地图id是否为数字
-        return mapId == null || !mapId.matches("^[0-9]{1,2}$");
+        //地图id是否为六位数字/大小写字母
+        return mapId == null || !mapId.matches("^[0-9a-zA-Z]{6}$");
     }
 
 
@@ -118,5 +119,34 @@ public class FormatValidator {
             code.append((int) (Math.random() * 10));
         }
         return code.toString();
+    }
+
+    public static Boolean isMapFormatInvalid(String map) {
+        try {
+            Scanner sc = new Scanner(map);
+            String s1 = sc.nextLine();
+            int targetNum = Integer.parseInt(s1.split(" ")[0]);
+            int row = Integer.parseInt(s1.split(" ")[1]);
+            int col = Integer.parseInt(s1.split(" ")[2]);
+            int blocks = Integer.parseInt(s1.split(" ")[3]);
+            int currentStep = Integer.parseInt(s1.split(" ")[4]);
+            int totalStep = Integer.parseInt(s1.split(" ")[5]);
+
+            String[][] s2 = new String[targetNum][4];
+            for (int i = 0; i < targetNum; i++) {
+                String s = sc.nextLine();
+                System.arraycopy(s.split(" "), 0, s2[i], 0, 4);
+            }
+
+            String[][] s3 = new String[row][col];
+            for (int i = 0; i < row; i++) {
+                String s = sc.nextLine();
+                System.arraycopy(s.split(" "), 0, s3[i], 0, col);
+            }
+            sc.close();
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
     }
 }
