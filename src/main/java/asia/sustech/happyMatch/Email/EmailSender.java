@@ -1,10 +1,13 @@
 package asia.sustech.happyMatch.Email;
 
+import com.sun.mail.util.MailSSLSocketFactory;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 public class EmailSender {
@@ -21,13 +24,23 @@ public class EmailSender {
         this.password = password;
     }
 
-    public void sendEmail(String recipient, String subject, String htmlBody) throws MessagingException {
+    public void sendEmail(String recipient, String subject, String htmlBody) throws MessagingException,
+            GeneralSecurityException {
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "false");
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", port);
-
+        // 发送服务器需要身份验证
+        props.setProperty("mail.smtp.auth", "true");
+        // 设置企业微信邮件服务器  企业邮箱
+        props.setProperty("mail.smtp.host", host);
+        // 设置企业微信邮件服务器端口
+        props.setProperty("mail.smtp.port", String.valueOf(port));
+        // 发送邮件协议名称
+        props.setProperty("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        MailSSLSocketFactory sf = new MailSSLSocketFactory();
+        sf.setTrustAllHosts(true);
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.ssl.socketFactory", sf);
+        
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);

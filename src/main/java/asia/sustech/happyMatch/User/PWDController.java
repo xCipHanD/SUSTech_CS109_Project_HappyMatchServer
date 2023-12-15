@@ -11,6 +11,7 @@ import asia.sustech.happyMatch.Utils.FormatValidator;
 import io.javalin.http.Context;
 
 import javax.mail.MessagingException;
+import java.security.GeneralSecurityException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
@@ -142,7 +143,7 @@ public class PWDController extends Thread {
                             "class=\"note\">Validity period is 10 minutes</p><p class=\"note\">This verification code" +
                             " is used to confirm your identity and should not be shared with others" +
                             ".</p></div></body></html>");
-        } catch (MessagingException e) {
+        } catch (MessagingException | GeneralSecurityException e) {
             throw new RuntimeException(e);
         }
     }

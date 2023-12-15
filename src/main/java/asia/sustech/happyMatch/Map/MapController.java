@@ -62,7 +62,7 @@ public class MapController {
         }
     }
 
-    public static void diyMap(Context ctx) {
+    public static void getDiyMap(Context ctx) {
         ctx.contentType("application/json; charset=utf-8");
         String token, mapId;
         try {
@@ -86,14 +86,14 @@ public class MapController {
             if (res.next()) {
                 //用户存在
                 //检测地图文件是否存在
-                File mapFile = new File(System.getProperty("user.dir") + "/map" + mapId);
+                File mapFile = new File(System.getProperty("user.dir") + "/maps" + mapId);
                 if (!mapFile.exists()) {
                     //地图文件不存在
                     new HTTPResult(ctx, StatusCode.NOT_FOUND, Msg.NOT_FOUND, null, null).Return();
                     return;
                 }
                 //获取地图的本地文件路径
-                String mapPath = System.getProperty("user.dir") + "/map" + mapId;
+                String mapPath = System.getProperty("user.dir") + "/maps" + mapId;
                 JSONObject data = JSON.parseObject("{}");   //构造返回的json
                 data.put("url", mapPath);
                 Logger.getLogger("GameController").info("用户" + res.getString("username") + "获取地图成功");
