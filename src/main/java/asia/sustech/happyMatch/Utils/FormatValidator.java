@@ -102,11 +102,16 @@ public class FormatValidator {
         return code == null || code.length() != 4 || !code.matches("^[0-9]{4}$");
     }
 
-    public static boolean isMapIdInvalid(String mapId) {
+    public static boolean isDiyMapIdInvalid(String mapId) {
         //地图id是否为六位数字/大小写字母
         return mapId == null || !mapId.matches("^[0-9a-zA-Z]{6}$");
     }
 
+    public static boolean isMapIdInvalid(String mapId) {
+        //地图id是否位1-50的数字
+        int id = Integer.parseInt(mapId);
+        return id < 1 || id > 50;
+    }
 
     public static boolean isResPathInValid(String res) {
         //res不包含"/ \"
@@ -121,29 +126,43 @@ public class FormatValidator {
         return code.toString();
     }
 
-    public static Boolean isMapFormatInvalid(String map) {
+    public static String getDiyMapId() {
+        StringBuilder mapId = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            int random = (int) (Math.random() * 62);
+            if (random < 10) {
+                mapId.append(random);
+            } else if (random < 36) {
+                mapId.append((char) (random + 55));
+            } else {
+                mapId.append((char) (random + 61));
+            }
+        }
+        return mapId.toString();
+    }
+
+    public static Boolean isMapInvalid(String map) {
         try {
             Scanner sc = new Scanner(map);
             String s1 = sc.nextLine();
-            int targetNum = Integer.parseInt(s1.split(" ")[0]);
-            int row = Integer.parseInt(s1.split(" ")[1]);
-            int col = Integer.parseInt(s1.split(" ")[2]);
-            int blocks = Integer.parseInt(s1.split(" ")[3]);
-            int currentStep = Integer.parseInt(s1.split(" ")[4]);
-            int totalStep = Integer.parseInt(s1.split(" ")[5]);
+            int level = Integer.parseInt(s1.split(" ")[0]);
+            int blockNums = Integer.parseInt(s1.split(" ")[1]);
+            int currentSteps = Integer.parseInt(s1.split(" ")[2]);
+            int totalSteps = Integer.parseInt(s1.split(" ")[3]);
+            int currentPoints = Integer.parseInt(s1.split(" ")[4]);
+            int TotalPoints = Integer.parseInt(s1.split(" ")[5]);
+            int propUsedCounts = Integer.parseInt(s1.split(" ")[6]);
 
-            String[][] s2 = new String[targetNum][4];
-            for (int i = 0; i < targetNum; i++) {
+            String[][] s3 = new String[8][8];
+            for (int i = 0; i < 8; i++) {
                 String s = sc.nextLine();
-                System.arraycopy(s.split(" "), 0, s2[i], 0, 4);
-            }
-
-            String[][] s3 = new String[row][col];
-            for (int i = 0; i < row; i++) {
-                String s = sc.nextLine();
-                System.arraycopy(s.split(" "), 0, s3[i], 0, col);
+                System.arraycopy(s.split(" "), 0, s3[i], 0, 8);
             }
             sc.close();
+            //检查地图格式
+            if (level < 0 || level > 50 || blockNums < 0 || blockNums > 6 || currentSteps < 0 || currentSteps > 100 || totalSteps < 0 || totalSteps > 100 || currentPoints < 0 || currentPoints > 10000 || TotalPoints < 0 || TotalPoints > 10000 || propUsedCounts < 0 || propUsedCounts > 3) {
+                return true;
+            }
             return false;
         } catch (Exception e) {
             return true;

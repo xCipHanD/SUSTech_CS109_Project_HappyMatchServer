@@ -10,10 +10,8 @@ class FormatValidatorTest {
 //        System.out.println(FormatValidator.isEmailValid("bba@asdb.iouou9"));
 //        System.out.println(FormatValidator.isEmailValid("bba@sdf.i.io."));
 //        System.out.println(FormatValidator.isEmailValid("?"));
-        System.out.println(FormatValidator.isMapFormatInvalid("""
-                2 8 8 2 2 9
-                1 0 10 5
-                2 0 10 6
+        System.out.println(FormatValidator.isMapInvalid("""
+                2 2 0 20 0 9000 3
                 0 0 0 0 0 0 0 0
                 0 0 0 0 0 0 0 0
                 0 0 0 0 0 0 0 0

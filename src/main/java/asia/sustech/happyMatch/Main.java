@@ -35,6 +35,11 @@ public class Main {
                 staticFiles.directory = System.getProperty("user.dir") + "/maps";
                 staticFiles.location = Location.EXTERNAL;
             });
+            config.staticFiles.add(staticFiles -> {
+                staticFiles.hostedPath = "/res/diyMaps";
+                staticFiles.directory = System.getProperty("user.dir") + "/diyMaps";
+                staticFiles.location = Location.EXTERNAL;
+            });
         }).start(Config.server_port);
         app.get("/", ctx -> ctx.result("Hello HappyMatch!"));
 
@@ -51,6 +56,9 @@ public class Main {
             path("/user/getProperty", () -> get(GoodsController::getItems));
             path("/ranklist", () -> get(GameController::rankList));
             path("/map/get", () -> get(MapController::getMap));
+            path("/map/getProcess", () -> get(MapController::getProcess));
+            path("/map/saveProcess", () -> post(MapController::saveProcess));
+            path("/map/saveDiy", () -> post(MapController::saveDiyMap));
             path("/shop/getGoodsList", () -> get(GoodsController::getGoodsList));
             path("/shop/buy", () -> get(GoodsController::buyGoods));
         });

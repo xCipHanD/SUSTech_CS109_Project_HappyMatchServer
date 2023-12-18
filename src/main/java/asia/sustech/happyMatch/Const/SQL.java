@@ -32,4 +32,7 @@ public class SQL {
             "DUPLICATE KEY UPDATE count = count + 1;";
     public static final String GET_ITEM_BY_ID = "SELECT * FROM items WHERE id = %s;";
     public static final String GET_PROPERTY = "SELECT * FROM property WHERE userId = %d;";
+    public static final String SAVE_MAP = "UPDATE user SET savedMap = '%s' WHERE token = '%s';";
+
+    //public static final String GET_MAP = "SELECT * FROM maps WHERE level = %d;";
 }
