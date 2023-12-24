@@ -97,10 +97,12 @@ public class PWDController extends Thread {
             ResultSet res = dao.query(sql);
             if (res.next()) {
                 //如果邮件已经被发送过，且验证码还在有效期内，不再发送邮件
-                if (res.getTimestamp("verifyCodeTime").getTime() + 10 * 60 * 1000 > System.currentTimeMillis()) {
-                    new HTTPResult(context, StatusCode.OK, Msg.ALREADY_SEND_CODE, null, null).Return();
-                    return;
-                }
+                try {
+                    if (res.getTimestamp("verifyCodeTime").getTime() + 10 * 60 * 1000 > System.currentTimeMillis()) {
+                        new HTTPResult(context, StatusCode.OK, Msg.ALREADY_SEND_CODE, null, null).Return();
+                        return;
+                    }
+                } catch (Exception ignored) {}
                 //用户存在 -> 更新验证码 -> 发送邮件
                 code = FormatValidator.getRandomCode();
                 sql = String.format(SQL.UPDATE_CODE, code, email);
