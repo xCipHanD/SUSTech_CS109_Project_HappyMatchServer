@@ -160,7 +160,7 @@ public class FormatValidator {
             }
             sc.close();
             //检查地图格式
-            if (level < 0 || level > 50 || blockNums < 0 || blockNums > 6 || currentSteps < 0 || currentSteps > 100 || totalSteps < 0 || totalSteps > 100 || currentPoints < 0 || currentPoints > 10000 || TotalPoints < 0 || TotalPoints > 10000 || propUsedCounts < 0 || propUsedCounts > 3) {
+            if (level < 0 || level > 50 || blockNums < 0 || blockNums > 6 || currentSteps < 0 || currentSteps > 1000 || totalSteps < 0 || totalSteps > 100 || currentPoints < 0 || currentPoints > 999999 || TotalPoints < 0 || TotalPoints > 999999 || propUsedCounts < 0 || propUsedCounts > 3) {
                 return true;
             }
             return false;
