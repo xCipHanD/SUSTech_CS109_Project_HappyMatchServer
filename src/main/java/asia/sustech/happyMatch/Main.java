@@ -62,7 +62,5 @@ public class Main {
             path("/shop/getGoodsList", () -> get(GoodsController::getGoodsList));
             path("/shop/buy", () -> get(GoodsController::buyGoods));
         });
-
-
     }
 }
