@@ -5,7 +5,7 @@
 # HappyMatch
 
 
-CS109期末project，模仿开心消消乐ui和游戏设计。
+CS109期末project，模仿了开心消消乐的ui和游戏设计。
 
 相关仓库： [前端](https://github.com/xcipHanD/happyMatch) | [后端](https://github.com/xcipHanD/happyMatchServer)
 
