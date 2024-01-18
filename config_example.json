@@ -1,0 +1,12 @@
+{
+  "server_port": "80",
+  "url": "jdbc:mysql://<yourIp>:<yourPort>/<yourDbName>?connectTimeout=200",
+  "dbUser": "<yourUserName>",
+  "dbPwd": "<yourPassword>",
+  "dbDriver": "com.mysql.jdbc.Driver",
+  "email_User": "<yourEmailSender>",
+  "email_Pwd": "<pwdOfEmailSender>",
+  "email_Host": "<smtpServerUrl example:smtphz.qiye.163.com>",
+  "email_Port": "<smtpServerPort example:465>",
+  "email_ForgetPWD": "<!DOCTYPE html><html><head><title>找回密码</title><style>body {font-family: Arial, sans-serif;text-align: center;}h1 {color: #333;}p {color: #666;}.button {display: inline-block;padding: 10px 20px;background-color: #4CAF50;color: #fff;text-decoration: none;border-radius: 4px;}</style></head><body><h1>欢迎注册happyMatch！</h1><p>请点击下面的按钮完成账户激活：</p><a class=\"button\" href=\"https://example.com/register\">激活</a></body></html>"
+}
