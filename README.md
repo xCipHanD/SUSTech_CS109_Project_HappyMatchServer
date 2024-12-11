@@ -7,7 +7,7 @@
 
 CS109期末project，模仿了开心消消乐的ui和游戏设计。
 
-相关仓库： [前端](https://github.com/xcipHanD/happyMatch) | [后端](https://github.com/xcipHanD/happyMatchServer)
+相关仓库： [前端](https://github.com/xcipHanD/SUSTech_CS109_Project_HappyMatch) | [后端](https://github.com/xcipHanD/SUSTech_CS109_Project_HappyMatchServer)
 
 
 ## 技术栈
